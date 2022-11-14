@@ -3,17 +3,25 @@ import api from "../../helpers/api";
 
 const initialState = {
   news: [],
+  currentNews: [],
 };
 
 export const getNews = createAsyncThunk("news/getNews", async () => {
   const { data } = await api.get("newstories.json");
-  console.log(data);
-  const links = await data
-    .slice(0, 100)
-    .map((id) => api.get(`item/${id}.json`));
-  console.log(links);
-  return (await Promise.all(links)).map(({ data }) => data);
+
+  const url = await data.slice(0, 100).map((id) => api.get(`item/${id}.json`));
+
+  return (await Promise.all(url)).map(({ data }) => data);
 });
+
+export const getCurrentNews = createAsyncThunk(
+  "news/getCurrentNews",
+  async (id) => {
+    const { data } = await api.get(`item/${id}.json`);
+
+    return data;
+  }
+);
 
 export const newsSlice = createSlice({
   name: "news",
@@ -22,6 +30,9 @@ export const newsSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(getNews.fulfilled, (state, action) => {
       state.news = action.payload;
+    });
+    builder.addCase(getCurrentNews.fulfilled, (state, action) => {
+      state.currentNews = action.payload;
     });
   },
 });

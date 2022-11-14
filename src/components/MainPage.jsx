@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getNews, selectNews } from "../features/news/newsSlice";
 import NewsBlock from "./NewsBlock";
@@ -6,21 +6,28 @@ import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 import { Link } from "react-router-dom";
-import CommentsBox from "./CommentsBox";
-import CurrentNews from "./CurrentNews";
 
 const MainPage = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getNews());
+    const interval = setInterval(() => {
+      forceUpdate();
+      console.log("обновление");
+    }, 60000);
+
+    return () => clearInterval(interval);
   }, []);
+
+  const [, updateState] = useState();
+  const forceUpdate = useCallback(() => updateState({}), []);
+
   const news = useSelector(selectNews);
   console.log(news);
 
   return (
     <div>
-      <CurrentNews />
       {!news.length ? (
         <Box sx={{ display: "flex" }}>
           <CircularProgress />
@@ -28,14 +35,22 @@ const MainPage = () => {
       ) : (
         <>
           <div>
-            <Button fullWidth="true" variant="contained" size="large">
+            <Button
+              onClick={forceUpdate}
+              fullWidth={true}
+              variant="contained"
+              size="large"
+            >
               Обновить новости
             </Button>
           </div>
           <div>
             {news &&
               news.map((news) => (
-                <Link to={`news/${news.id}`} style={{ textDecoration: "none" }}>
+                <Link
+                  to={`/news/${news.id}`}
+                  style={{ textDecoration: "none" }}
+                >
                   <NewsBlock
                     key={news.id}
                     time={news.time}
