@@ -9,19 +9,18 @@ import { Link } from "react-router-dom";
 
 const MainPage = () => {
   const dispatch = useDispatch();
+  const [state, updateState] = useState();
+  const forceUpdate = useCallback(() => updateState({}), []);
 
   useEffect(() => {
     dispatch(getNews());
     const interval = setInterval(() => {
       forceUpdate();
       console.log("обновление");
-    }, 60000);
+    }, 6000);
 
     return () => clearInterval(interval);
-  }, []);
-
-  const [, updateState] = useState();
-  const forceUpdate = useCallback(() => updateState({}), []);
+  }, [state]);
 
   const news = useSelector(selectNews);
   console.log(news);
