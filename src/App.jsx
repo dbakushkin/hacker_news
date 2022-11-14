@@ -2,7 +2,7 @@ import "./App.css";
 import MainPage from "./components/MainPage";
 import Container from "@mui/material/Container";
 import { Switch, Route } from "react-router-dom";
-import CurrentNews from "./components/CurrentNews";
+import NewsItem from "./components/NewsItem";
 
 function App() {
   return (
@@ -12,7 +12,7 @@ function App() {
           <MainPage />
         </Route>
         <Route path="/news/:newsId">
-          <CurrentNews />
+          <NewsItem />
         </Route>
       </Switch>
     </Container>

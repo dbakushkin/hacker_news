@@ -7,11 +7,12 @@ import ChildComments from "./ChildComments";
 const CommentsBox = ({ by, time, text, id, kids }) => {
   console.log(kids, id);
   const [showComments, setShowComments] = useState(false);
-  const { childComments } = useSelector((store) => store.comments);
-  const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getChildComments(kids, id));
   }, []);
+
+  const dispatch = useDispatch();
+  const { childComments } = useSelector((store) => store.comments);
   const handleOpen = () => {
     setShowComments(!showComments);
   };
@@ -31,9 +32,11 @@ const CommentsBox = ({ by, time, text, id, kids }) => {
         </Grid>
         {showComments &&
           childComments[id] &&
-          childComments[id].map(({ by, text, id }) => (
-            <ChildComments key={id} author={by} text={text} />
-          ))}
+          childComments[id].map(({ by, text, deleted, id }, i) =>
+            !deleted ? (
+              <ChildComments order={i} key={id} authorName={by} text={text} />
+            ) : null
+          )}
         <Divider variant="fullWidth" style={{ margin: "30px 0" }} />
       </Paper>
     </div>

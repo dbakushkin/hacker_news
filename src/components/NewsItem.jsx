@@ -30,6 +30,7 @@ const CurrentNews = () => {
   }, []);
 
   const forceUpdate = () => {
+    dispatch(getCurrentNews(newsId));
     dispatch(getComments(newsId));
   };
 

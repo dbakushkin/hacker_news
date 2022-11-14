@@ -24,10 +24,20 @@ export const getComments = createAsyncThunk(
 export const getChildComments = createAsyncThunk(
   "comments/getChildComments",
   async (kids, id) => {
-    const parentId = id;
-    const url = kids.map((id) => api.get(`item/${id}.json`));
-    const result = (await Promise.all(url)).map(({ data }) => data);
-    return { parentId, result };
+    const result = [];
+    const idChild = async (kids) => {
+      for (let i = 0; i < kids.length; i++) {
+        const { data } = await api.get(`item/${kids[i]}.json`);
+        if (data.kids) {
+          result.push(data);
+          await idChild(data.kids);
+        } else {
+          result.push(data);
+        }
+      }
+    };
+    await idChild(kids);
+    return { id: id, result };
   }
 );
 
@@ -40,7 +50,7 @@ export const commentSlice = createSlice({
       state.comments = action.payload;
     });
     builder.addCase(getChildComments.fulfilled, (state, action) => {
-      state.childComments[action.payload.id] = action.payload;
+      state.childComments[action.payload.id] = action.payload.result;
     });
   },
 });
