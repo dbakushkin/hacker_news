@@ -5,7 +5,6 @@ const initialState = {
   comments: [],
   childComments: {},
 };
-
 export const getComments = createAsyncThunk(
   "comments/getComments",
   async (id) => {
@@ -22,6 +21,16 @@ export const getComments = createAsyncThunk(
   }
 );
 
+export const getChildComments = createAsyncThunk(
+  "comments/getChildComments",
+  async (kids, id) => {
+    const parentId = id;
+    const url = kids.map((id) => api.get(`item/${id}.json`));
+    const result = (await Promise.all(url)).map(({ data }) => data);
+    return { parentId, result };
+  }
+);
+
 export const commentSlice = createSlice({
   name: "comments",
   initialState,
@@ -29,6 +38,9 @@ export const commentSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(getComments.fulfilled, (state, action) => {
       state.comments = action.payload;
+    });
+    builder.addCase(getChildComments.fulfilled, (state, action) => {
+      state.childComments[action.payload.id] = action.payload;
     });
   },
 });

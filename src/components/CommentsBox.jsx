@@ -1,13 +1,23 @@
 import { Paper, Grid, Divider, Button } from "@mui/material";
 import { useEffect, useState } from "react";
-import { getComments } from "../features/comments/commentsSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { getChildComments } from "../features/comments/commentsSlice";
+import ChildComments from "./ChildComments";
 
-const CommentsBox = ({ by, time, text }) => {
+const CommentsBox = ({ by, time, text, id, kids }) => {
+  console.log(kids, id);
   const [showComments, setShowComments] = useState(false);
-
+  const { childComments } = useSelector((store) => store.comments);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getChildComments(kids, id));
+  }, []);
   const handleOpen = () => {
     setShowComments(!showComments);
   };
+
+  console.log(childComments);
+
   const date = time ? new Date(+time * 1000).toLocaleString() : "";
   return (
     <div style={{ padding: 14 }} className="App">
@@ -19,7 +29,11 @@ const CommentsBox = ({ by, time, text }) => {
             <p style={{ textAlign: "left", color: "gray" }}>{date}</p>
           </Grid>
         </Grid>
-
+        {showComments &&
+          childComments[id] &&
+          childComments[id].map(({ by, text, id }) => (
+            <ChildComments key={id} author={by} text={text} />
+          ))}
         <Divider variant="fullWidth" style={{ margin: "30px 0" }} />
       </Paper>
     </div>

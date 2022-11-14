@@ -9,7 +9,7 @@ const initialState = {
 export const getNews = createAsyncThunk("news/getNews", async () => {
   const { data } = await api.get("newstories.json");
 
-  const url = await data.slice(0, 100).map((id) => api.get(`item/${id}.json`));
+  const url = data.slice(0, 100).map((id) => api.get(`item/${id}.json`));
 
   return (await Promise.all(url)).map(({ data }) => data);
 });

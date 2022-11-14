@@ -10,11 +10,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { useEffect, useState, useCallback } from "react";
-import {
-  getCurrentNews,
-  getNews,
-  selectNews,
-} from "../features/news/newsSlice";
+import { getCurrentNews } from "../features/news/newsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import {
@@ -33,8 +29,9 @@ const CurrentNews = () => {
     dispatch(getCurrentNews(newsId));
   }, []);
 
-  const [, updateState] = useState();
-  const forceUpdate = useCallback(() => updateState({}), []);
+  const forceUpdate = () => {
+    dispatch(getComments(newsId));
+  };
 
   useEffect(() => {
     dispatch(getComments(newsId));
@@ -57,7 +54,7 @@ const CurrentNews = () => {
         <CardContent>
           <Typography> By: {currentNews.by}</Typography>
           <Typography>
-            <a href={currentNews.url}>{currentNews.url}</a>
+            Url:<a href={currentNews.url}>{currentNews.url}</a>
           </Typography>
         </CardContent>
       </Card>
@@ -71,9 +68,11 @@ const CurrentNews = () => {
         comments.map((comment) => (
           <CommentsBox
             by={comment.by}
+            kids={comment.kids}
             text={comment.text}
             time={comment.time}
             key={comment.id}
+            id={comment.id}
           />
         ))}
     </div>
