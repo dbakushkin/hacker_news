@@ -31,10 +31,10 @@ const CommentsBox = ({ by, time, text, id, kids }) => {
           </Grid>
         </Grid>
         {showComments &&
-          childComments[id] &&
-          childComments[id].map(({ by, text, deleted, id }, i) =>
+          childComments &&
+          childComments.map(({ by, text, deleted, id }) =>
             !deleted ? (
-              <ChildComments order={i} key={id} authorName={by} text={text} />
+              <ChildComments key={id} authorName={by} text={text} />
             ) : null
           )}
         <Divider variant="fullWidth" style={{ margin: "30px 0" }} />

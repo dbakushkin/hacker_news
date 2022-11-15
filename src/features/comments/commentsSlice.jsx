@@ -50,7 +50,7 @@ export const commentSlice = createSlice({
       state.comments = action.payload;
     });
     builder.addCase(getChildComments.fulfilled, (state, action) => {
-      state.childComments[action.payload.id] = action.payload.result;
+      state.childComments = action.payload.result;
     });
   },
 });
