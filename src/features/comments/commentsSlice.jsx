@@ -3,7 +3,7 @@ import api from "../../helpers/api";
 
 const initialState = {
   comments: [],
-  childComments: {},
+  childComments: [],
 };
 export const getComments = createAsyncThunk(
   "comments/getComments",
@@ -24,20 +24,10 @@ export const getComments = createAsyncThunk(
 export const getChildComments = createAsyncThunk(
   "comments/getChildComments",
   async (kids, id) => {
-    const result = [];
-    const idChild = async (kids) => {
-      for (let i = 0; i < kids.length; i++) {
-        const { data } = await api.get(`item/${kids[i]}.json`);
-        if (data.kids) {
-          result.push(data);
-          await idChild(data.kids);
-        } else {
-          result.push(data);
-        }
-      }
-    };
-    await idChild(kids);
-    return { id: id, result };
+    const parentId = id;
+    const url = kids.map((id) => api.get(`item/${id}.json`));
+    const result = (await Promise.all(url)).map(({ data }) => data);
+    return { result };
   }
 );
 

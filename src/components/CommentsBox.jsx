@@ -16,8 +16,9 @@ const CommentsBox = ({ by, time, text, id, kids }) => {
   const handleOpen = () => {
     setShowComments(!showComments);
   };
+  const filteredComments = childComments.filter((elem) => elem.parent === id);
 
-  console.log(childComments);
+  console.log(filteredComments);
 
   const date = time ? new Date(+time * 1000).toLocaleString() : "";
   return (
@@ -31,8 +32,8 @@ const CommentsBox = ({ by, time, text, id, kids }) => {
           </Grid>
         </Grid>
         {showComments &&
-          childComments &&
-          childComments.map(({ by, text, deleted, id }) =>
+          filteredComments &&
+          filteredComments.map(({ by, text, deleted, id }) =>
             !deleted ? (
               <ChildComments key={id} authorName={by} text={text} />
             ) : null
