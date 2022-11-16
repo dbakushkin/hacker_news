@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getNews, selectNews } from "../features/news/newsSlice";
 import NewsBlock from "./NewsBlock";
@@ -15,14 +15,12 @@ const MainPage = () => {
     dispatch(getNews());
     const interval = setInterval(() => {
       forceUpdate();
-      console.log("обновление");
     }, 60000);
 
     return () => clearInterval(interval);
   }, []);
 
   const news = useSelector(selectNews);
-  console.log(news);
 
   return (
     <div>

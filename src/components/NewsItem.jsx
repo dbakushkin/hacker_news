@@ -9,7 +9,7 @@ import {
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect } from "react";
 import { getCurrentNews } from "../features/news/newsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import RefreshIcon from "@mui/icons-material/Refresh";
@@ -23,7 +23,6 @@ const CurrentNews = () => {
   const dispatch = useDispatch();
 
   const { currentNews } = useSelector((store) => store.news);
-  console.log(currentNews);
 
   useEffect(() => {
     dispatch(getCurrentNews(newsId));

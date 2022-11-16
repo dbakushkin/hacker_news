@@ -4,6 +4,7 @@ import api from "../../helpers/api";
 const initialState = {
   comments: [],
   childComments: [],
+  subChildComments: [],
 };
 export const getComments = createAsyncThunk(
   "comments/getComments",
@@ -23,10 +24,19 @@ export const getComments = createAsyncThunk(
 
 export const getChildComments = createAsyncThunk(
   "comments/getChildComments",
-  async (kids, id) => {
-    const parentId = id;
+  async (kids) => {
     const url = kids.map((id) => api.get(`item/${id}.json`));
     const result = (await Promise.all(url)).map(({ data }) => data);
+    return { result };
+  }
+);
+
+export const getSubChildComments = createAsyncThunk(
+  "comments/getSubChildComments",
+  async (kids) => {
+    const url = kids.map((id) => api.get(`item/${id}.json`));
+    const result = (await Promise.all(url)).map(({ data }) => data);
+    console.log(result);
     return { result };
   }
 );
@@ -41,6 +51,9 @@ export const commentSlice = createSlice({
     });
     builder.addCase(getChildComments.fulfilled, (state, action) => {
       state.childComments = action.payload.result;
+    });
+    builder.addCase(getSubChildComments.fulfilled, (state, action) => {
+      state.subChildComments = action.payload.result;
     });
   },
 });
